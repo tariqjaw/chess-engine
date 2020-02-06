@@ -8,9 +8,9 @@
 
 int main() {
 	Board my_board;
-	for (int i = 0; i < 8; i++) {
-		my_board.ShowBoard(my_board.GetClearRank(i));
+	for (int i = 0; i < 64; i++) {
+		my_board.ShowBoard(my_board.GetPiece(i));
 	};
 
 	return 0;
-}
+};

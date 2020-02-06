@@ -39,19 +39,23 @@ Board::Board() {
 	mask_file_[5] = 0x2020202020202020;
 	mask_file_[6] = 0x4040404040404040;
 	mask_file_[7] = 0x8080808080808080;
+
+	for (int i = 0; i < 64; i++) {
+		piece_[i] = 1ULL << i;
+	}
 };
 
 void Board::ShowBoard(U64 bb) {
-	U64 shift_bb = 1ULL;
+	U64 shift = 1ULL;
 	int rank = 0;
 	int file = 0;
-	int sq = 0;
+	int square = 0;
 	std::cout << "\n";
 	for (rank = RANK_8; rank >= RANK_1; rank--) {
 		for (file = FILE_A; file <= FILE_H; file++) {
-			sq = ((file)+(rank * 8));
-			if ((shift_bb << sq) & bb) {
-				std::cout << "X ";
+			square = ((file)+(rank * 8));
+			if ((shift << square) & bb) {
+				std::cout << "x ";
 			}
 			else {
 				std::cout << "- ";
@@ -77,4 +81,8 @@ U64 Board::GetMaskFile(int file) {
 
 U64 Board::GetMaskRank(int rank) {
 	return mask_rank_[rank];
+};
+
+U64 Board::GetPiece(int square) {
+	return piece_[square];
 };

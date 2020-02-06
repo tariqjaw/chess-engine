@@ -35,6 +35,7 @@ class Board {
 		U64 clear_rank_[8];
 		U64 mask_file_[8];
 		U64 mask_rank_[8];
+		U64 piece_[64];
 	public:
 		Board();
 		void ShowBoard(U64 bitboard);
@@ -42,6 +43,9 @@ class Board {
 		U64 GetClearRank(int rank);
 		U64 GetMaskFile(int file);
 		U64 GetMaskRank(int rank);
+		U64 GetWhiteKing();
+		U64 GetPiece(int square);
+		U64 KingValid(Board b);
 		
 		
 };
