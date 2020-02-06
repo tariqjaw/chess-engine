@@ -2,6 +2,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 #include <stdio.h>
+#include <bitset>
 #include <iostream>
 #include "types.hpp"
 
@@ -9,11 +10,43 @@ typedef uint64_t U64;
 
 class Board {
 	private:
+		// piece bitboards
 		U64 *bitboard;
+		U64 white_pawns_;
+		U64 white_rooks_;
+		U64 white_knights_;
+		U64 white_bishops_;
+		U64 white_queens_;
+		U64 white_king_;
+		U64 white_pieces_;
+
+		U64 black_pawns_;
+		U64 black_rooks_;
+		U64 black_knights_;
+		U64 black_bishops_;
+		U64 black_queens_;
+		U64 black_king_;
+		U64 black_pieces_;
+
+		U64 all_pieces_;
+
+		// lookup tables
+		U64 clear_file_[8];
+		U64 clear_rank_[8];
+		U64 mask_file_[8];
+		U64 mask_rank_[8];
 	public:
-		Board(),
-		~Board();
+		Board();
+		void ShowBoard(U64 bitboard);
+		U64 GetClearFile(int file);
+		U64 GetClearRank(int rank);
+		U64 GetMaskFile(int file);
+		U64 GetMaskRank(int rank);
+		
+		
 };
+
+
 
 class Undo {
 	private:
@@ -34,17 +67,17 @@ class BoardStruct {
 
 		int en_passant_;
 		int fifty_move_;
-		int castle_perm_;
+		int castle_permisson_;
 		int side_;
 
-		int piece_num_;
+		int piece_number_;
 		int piece_big_;
-		int piece_maj_;
-		int piece_min_;
+		int piece_major_;
+		int piece_minor_;
 
-		Undo History[2048];
+		Undo History_[2048];
 
-		U64 poskey;
+		U64 poskey_;
 };
 
 #endif
