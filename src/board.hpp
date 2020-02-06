@@ -12,29 +12,29 @@ class Board {
 	private:
 		// piece bitboards
 		U64 *bitboard;
-		U64 white_pawns;
-		U64 white_rooks;
-		U64 white_knights;
-		U64 white_bishops;
-		U64 white_queens;
-		U64 white_king;
-		U64 white_pieces;
+		U64 white_pawns_;
+		U64 white_rooks_;
+		U64 white_knights_;
+		U64 white_bishops_;
+		U64 white_queens_;
+		U64 white_king_;
+		U64 white_pieces_;
 
-		U64 black_pawns;
-		U64 black_rooks;
-		U64 black_knights;
-		U64 black_bishops;
-		U64 black_queens;
-		U64 black_king;
-		U64 black_pieces;
+		U64 black_pawns_;
+		U64 black_rooks_;
+		U64 black_knights_;
+		U64 black_bishops_;
+		U64 black_queens_;
+		U64 black_king_;
+		U64 black_pieces_;
 
-		U64 all_pieces;
+		U64 all_pieces_;
 
 		// lookup tables
-		U64 clear_file[8];
-		U64 clear_rank[8];
-		U64 mask_file[8];
-		U64 mask_rank[8];
+		U64 clear_file_[8];
+		U64 clear_rank_[8];
+		U64 mask_file_[8];
+		U64 mask_rank_[8];
 	public:
 		Board();
 		void ShowBoard(U64 bitboard);
@@ -50,34 +50,34 @@ class Board {
 
 class Undo {
 	private:
-		int move;
-		int castle_perm;
-		int en_passant;
-		int fifty_move;
+		int move_;
+		int castle_perm_;
+		int en_passant_;
+		int fifty_move_;
 };
 
 class BoardStruct {
 	private:
-		int pieces[64];
-		int king;
-		U64 pawns[3];
+		int pieces_[64];
+		int king_;
+		U64 pawns_[3];
 
-		int ply;
-		int h_ply;
+		int ply_;
+		int h_ply_;
 
-		int en_passant;
-		int fifty_move;
-		int castle_permisson;
-		int side;
+		int en_passant_;
+		int fifty_move_;
+		int castle_permisson_;
+		int side_;
 
-		int piece_number;
-		int piece_big;
-		int piece_major;
-		int piece_minor;
+		int piece_number_;
+		int piece_big_;
+		int piece_major_;
+		int piece_minor_;
 
-		Undo History[2048];
+		Undo History_[2048];
 
-		U64 poskey;
+		U64 poskey_;
 };
 
 #endif
