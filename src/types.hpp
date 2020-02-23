@@ -18,21 +18,21 @@ namespace piece {
 	};
 
 	enum Pieces: unsigned int {
-		W_PAWN = 0,
-		W_KNIGHT = 1,
-		W_BISHOP = 2,
-		W_ROOK = 3,
-		W_QUEEN = 4,
-		W_KING = 5,
-		B_PAWN = 6,
-		B_KNIGHT = 7,
-		B_BISHOP = 8,
-		B_ROOK = 9,
-		B_QUEEN = 10,
-		B_KING = 11,
-		W_PIECES = 12,
-		B_PIECES = 13,
-		EMPTY = 14
+		EMPTY = 0,
+		W_PAWN = 1,
+		W_KNIGHT = 2,
+		W_BISHOP = 3,
+		W_ROOK = 4,
+		W_QUEEN = 5,
+		W_KING = 6,
+		B_PAWN = 7,
+		B_KNIGHT = 8,
+		B_BISHOP = 9,
+		B_ROOK = 10,
+		B_QUEEN = 11,
+		B_KING = 12,
+		W_PIECES = 13,
+		B_PIECES = 14,
 	};
 
 	enum PieceValue: unsigned int {
@@ -60,7 +60,7 @@ enum Square {
 	A6, B6, C6, D6, E6, F6, G6, H6,
 	A7, B7, C7, D7, E7, F7, G7, H7,
 	A8, B8, C8, D8, E8, F8, G8, H8,
-	NO_SQ
+	NO_SQUARE
 };
 
 enum File {
@@ -85,6 +85,13 @@ enum Rank {
 	RANK_7,
 	RANK_8,
 	RANK_NULL
+};
+
+enum Castling {
+		W_KING_CASTLING = 1,
+		B_KING_CASTLING = 2,
+		W_QUEEN_CASTLING = 4,
+		B_QUEEN_CASTLING = 8
 };
 
 #endif
