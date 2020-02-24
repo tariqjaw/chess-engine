@@ -38,6 +38,5 @@ int main() {
 	my_board.ShowBoard(temp);
 	srand(time(NULL));
 	std::cout << h_key.Rand64();
-	my_board.ParseFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", my_board);
 	return 0;
 };
