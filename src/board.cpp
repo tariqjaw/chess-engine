@@ -43,7 +43,7 @@ Board::Board() {
 	mask_file_[6] = 0x4040404040404040;
 	mask_file_[7] = 0x8080808080808080;
 
-	const int BitTable[64] = { // precomputed table
+	const int BitTable[64] = { // precomputed table (https://www.chessprogramming.org/Looking_for_Magics)
 	63, 30, 3, 32, 25, 41, 22, 33, 15, 50, 42, 13, 11, 53, 19, 34, 61, 29, 2,
 	51, 21, 43, 45, 10, 18, 47, 1, 54, 9, 57, 0, 35, 62, 31, 40, 4, 49, 5, 52,
 	26, 60, 6, 23, 44, 46, 27, 56, 16, 7, 39, 48, 24, 59, 14, 12, 55, 38, 28,
@@ -52,8 +52,8 @@ Board::Board() {
 
 	white_king_ = 1ULL << E1;
 	white_knights_ = 1ULL << B1 | 1ULL << G1;
-	white_pawns_ = 1ULL << A2 | 1ULL << B2 | 1ULL << C2 | 1ULL << D2 | 1ULL << E2 | 1ULL << F2 | 1ULL << G2 | 1ULL << H2;
-	black_pawns_ = 1ULL << A7 | 1ULL << B7 | 1ULL << C7 | 1ULL << D7 | 1ULL << E7 | 1ULL << F7 | 1ULL << G7 | 1ULL << H7;
+	white_pawns_ = 1ULL << A2 | 1ULL << B2 | 1ULL << C2 | 1ULL << D2 | 1ULL << E2 | 1ULL << F2 | 1ULL << G2 | 1ULL << H2 | 1ULL << G3 ;
+	black_pawns_ = 1ULL << A7 | 1ULL << B7 | 1ULL << C7 | 1ULL << D7 | 1ULL << E7 | 1ULL << F7 | 1ULL << G7 | 1ULL << H7 | 1ULL << H4;
 
 	for (int i = 0; i < 64; i++) {
 			piece_[i] = 1ULL << i;
@@ -62,22 +62,19 @@ Board::Board() {
 	white_king_moves_ = KingMoves(white_king_, white_pieces_);
 	black_king_moves_ = KingMoves(black_king_, black_pieces_);
 	white_knights_moves_ = KnightMoves(white_knights_, white_pieces_);
-	black_knights_moves_ = KnightMoves(black_knights_, black_pieces_);
-
-	
+	black_knights_moves_ = KnightMoves(black_knights_, black_pieces_);	
 };
 
-void Board::ShowBoard(U64 bitboard) {
-	U64 shift = 1ULL;
+void Board::ShowBoard(U64 bitboard) { // prints board to console
 	int rank = 0;
 	int file = 0;
-	int square = 0;
+	int pos = 0;
 	std::cout << "\n";
 	for (rank = RANK_8; rank >= RANK_1; rank--) {
 		for (file = FILE_A; file <= FILE_H; file++) {
-			square = ((file)+(rank * 8));
-			if ((bitboard & shift << square)) {
-				std::cout << "x ";
+			pos = rank * 8 + file;
+			if ((bitboard & 1ULL << pos)) { // bitwise left shift to given position
+				std::cout << "1 ";
 			}
 			else {
 				std::cout << ". ";
@@ -222,22 +219,22 @@ void Board::ResetBoard(Board b) {
 ;
 
 U64 Board::KingMoves(U64 king, U64 side) { // returns valid set of moves for kings
-	U64 NW = king << 7 & GetClearFile(FILE_H);
+	U64 NW = king << 7 & GetClearFile(FILE_H); // bitwise left shift to move to appropriate square
 	U64 N = king << 8;
-	U64 NE = king << 9 & GetClearFile(FILE_A);
-	U64 E = king << 1 & GetClearFile(FILE_A);
-	U64 SE = king >> 7 & GetClearFile(FILE_A);
+	U64 NE = king << 9 & GetClearFile(FILE_A); // files are cleared depending on which way the king is moving to stop it moving off the board
+	U64 E = king << 1 & GetClearFile(FILE_A); // by performing a bitwise AND, when the king moves east all moves generated on file A are ignored, and vice versa
+	U64 SE = king >> 7 & GetClearFile(FILE_A); // similarly, bitwise right shifts to move to the remaining positions
 	U64 S = king >> 8;
 	U64 SW = king >> 9 & GetClearFile(FILE_H);
 	U64 W = king >> 1 & GetClearFile(FILE_H);
 
-	U64 all_moves = NW | N | NE | E | SE | S | SW | W;
-	U64 king_valid = all_moves & ~side;
-	return king_valid;
+	U64 all_moves = NW | N | NE | E | SE | S | SW | W; // return the set of all moves generated
+	U64 king_all = all_moves & ~side; // bitwise AND with own side to prevent the piece colliding with existing pieces of the same colour
+	return king_all;
 };
 
-U64 Board::KnightMoves(U64 knights, U64 side) { // returns valid set of moves for knights
-		U64 NW1 = knights << 6 & GetClearFile(FILE_H) & GetClearFile(FILE_G);
+U64 Board::KnightMoves(U64 knights, U64 side) { // returns valid set of moves for knights, same method of generation as king's moves
+		U64 NW1 = knights << 6 & GetClearFile(FILE_H) & GetClearFile(FILE_G); // two files are cleared for moves that are able to move 2 across
 		U64 NW2 = knights << 15 & GetClearFile(FILE_H);
 		U64 NE1 = knights << 17 & GetClearFile(FILE_A);
 		U64 NE2 = knights << 10 & GetClearFile(FILE_A) & GetClearFile(FILE_B);
@@ -247,135 +244,43 @@ U64 Board::KnightMoves(U64 knights, U64 side) { // returns valid set of moves fo
 		U64 SW2 = knights >> 10 & GetClearFile(FILE_H) & GetClearFile(FILE_G); 
 
 		U64 all_moves = NW1 | NW2 | NE1 | NE2 | SE1 | SE2 | SW1 | SW2;
-		U64 knight_valid = all_moves & ~side;
-		return knight_valid;
+		U64 knight_all = all_moves & ~side;
+		return knight_all;
 };
 
-U64 Board::WhitePawnMoves(U64 white_pawns, U64 black, U64 all) { // returns valid set of moves for pawns
-		// one space in front of pawn
+U64 Board::WhitePawnMoves(U64 white_pawns, U64 black, U64 all) { // returns valid set of moves for white pawns
+		// find position one space in front of pawn
 		U64 white_pawn_single = white_pawns << 8 & ~all;
-		// two spaces in front of pawn
-		U64 white_pawn_double = white_pawns << 16 & GetMaskRank(RANK_4) & ~all;
+		// find position two spaces in front of pawn ONLY if the pawn is on the second rank
+		U64 white_pawn_double = white_pawns << 16 & GetMaskRank(RANK_4) & ~all; // the pawn can only move onto rank 4 if it started on rank 2
 		U64 white_pawn_moves = white_pawn_single | white_pawn_double;
-		U64 white_pawn_attack_left = white_pawns << 7 & GetClearFile(FILE_A);
+		U64 white_pawn_attack_left = white_pawns << 7 & GetClearFile(FILE_A); // clear file A 
 		U64 white_pawn_attack_right = white_pawns << 9 & GetClearFile(FILE_H);
-		U64 white_pawn_attacks = (white_pawn_attack_left | white_pawn_attack_right) & black;
-		U64 white_pawn_valid = white_pawn_moves | white_pawn_attacks;
-		return white_pawn_valid;
+		U64 white_pawn_attacks = (white_pawn_attack_left | white_pawn_attack_right) & black; // AND with black pieces; attacking is only allowed when there is a target
+		U64 white_pawn_all = white_pawn_moves | white_pawn_attacks; // set of valid moves and attacks
+		return white_pawn_all;
 };
 
-U64 Board::BlackPawnMoves(U64 black_pawns, U64 black, U64 all) { // returns valid set of moves for pawns
-		// one space in front of pawn
+U64 Board::BlackPawnMoves(U64 black_pawns, U64 black, U64 all) { // same as white pawns; shift direction swapped as black pawns travel in the opposite direction
 		U64 black_pawn_single = black_pawns >> 8 & ~all;
-		// two spaces in front of pawn
-		U64 black_pawn_double = black_pawns >> 16 & GetMaskRank(RANK_5) & ~all;
+		U64 black_pawn_double = black_pawns >> 16 & GetMaskRank(RANK_5) & ~all; 
 		U64 black_pawn_moves = black_pawn_single | black_pawn_double;
-		U64 black_pawn_attack_left = black_pawns << 7 & GetClearFile(FILE_A);
-		U64 black_pawn_attack_right = black_pawns << 9 & GetClearFile(FILE_H);
+		U64 black_pawn_attack_left = black_pawns >> 7 & GetClearFile(FILE_H);
+		U64 black_pawn_attack_right = black_pawns >> 9 & GetClearFile(FILE_A);
 		U64 black_pawn_attacks = (black_pawn_attack_left | black_pawn_attack_right) & black;
-		U64 black_pawn_valid = black_pawn_moves | black_pawn_attacks;
-		return black_pawn_valid;
+		U64 black_pawn_all = black_pawn_moves | black_pawn_attacks;
+		return black_pawn_all;
 };
 
-U64 Board::CountBits(U64 bitboard) { // return count of bits set to 1 in a bitboard
+int Board::CountBits(U64 bitboard) { // return count of bits set to 1 in a bitboard (https://www.chessprogramming.org/Looking_for_Magics)
 		int bit_count;
 		for (bit_count = 0; bitboard; bit_count++, bitboard &= bitboard - 1);
 		return bit_count;
 }
 
-U64 Board::PopBit(U64 *bitboard) { // return LSB, then set it to 0
+int Board::PopBit(U64 *bitboard) { // pop LSB off the bitboard (https://www.chessprogramming.org/Looking_for_Magics)
 		U64 board = *bitboard ^ (*bitboard - 1);
 		unsigned int fold = (unsigned)((board & 0xffffffff) ^ (board >> 32));
 		*bitboard &= (*bitboard - 1);
 		return bit_table[(fold * 0x783a9b23) >> 26];
 }
-
-
-
-
-int Board::ParseFEN(const char* fen, Board b) {
-	int rank = RANK_8;
-	int file = FILE_A;
-	int piece = 0;
-	int count = 0;
-	int i = 0;
-	int sq = 0;
-	HashKey hash;
-
-	while ((rank >= RANK_1) && *fen) {
-		count = 1;
-		switch (*fen) {
-		case 'P': piece = piece::W_PAWN; break;
-		case 'R': piece = piece::W_ROOK; break;
-		case 'N': piece = piece::W_KNIGHT; break;
-		case 'B': piece = piece::W_BISHOP; break;
-		case 'Q': piece = piece::W_QUEEN; break;
-		case 'K': piece = piece::W_KING; break;
-		case 'p': piece = piece::B_PAWN; break;
-		case 'r': piece = piece::B_ROOK; break;
-		case 'n': piece = piece::B_KNIGHT; break;
-		case 'b': piece = piece::B_BISHOP; break;
-		case 'q': piece = piece::B_QUEEN; break;
-		case 'k': piece = piece::B_KING; break;
-
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		case '8':
-			piece = piece::EMPTY;
-			count = *fen - '0';
-			break;
-
-		case '/':
-		case ' ':
-			rank--;
-			file = FILE_A;
-			fen++;
-			continue;
-		default:
-			std::cout << "FEN Invalid \n";
-			return -1;
-
-		}
-
-		for (i = 0; i < count; i++) {
-			sq = rank * 8 + file;
-			if (piece != piece::EMPTY) {
-				piece_array_[sq] = piece;
-			}
-			file++;
-		}
-		fen++;
-	}
-	side_ = (*fen == 'w') ? WHITE : BLACK;
-	fen += 2;
-
-	for (i = 0; i < 4; i++) {
-		if (*fen == ' ') {
-			break;
-		}
-		switch (*fen) {
-		case 'K': castle_permisson_ |= W_KING_CASTLING; break;
-		case 'Q': castle_permisson_ |= W_QUEEN_CASTLING; break;
-		case 'k': castle_permisson_ |= B_KING_CASTLING; break;
-		case 'q': castle_permisson_ |= B_QUEEN_CASTLING; break;
-		default: break;
-		}
-		fen++;
-	}
-	fen++;
-
-	if (*fen != '-') {
-		file = fen[0] - 'a';
-		rank = fen[1] - '1';
-		en_passant_ = (file)+(rank * 8);
-	}
-	
-	position = hash.PositionKey(b);
-
-	return 0;
-};
