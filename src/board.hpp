@@ -103,12 +103,11 @@ class Board {
 		int GetPieceArray(int i);
 		U64 GetBitTable(int index);
 		int GetCastlePermission();
-		U64 CountBits(U64 bitboard);
-		U64 PopBit(U64* bitboard);
+		int CountBits(U64 bitboard);
+		int PopBit(U64* bitboard);
 		void SetBit(U64& bitboard, int index);
 		void ClearBit(U64& bitboard, int index);
 		void ResetBoard(Board b);
-		int ParseFEN(const char* fen, Board b);
 
 
 		
