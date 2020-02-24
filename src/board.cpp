@@ -7,23 +7,23 @@
 
 Board::Board() {
 	//precomputed lookup tables
-  clear_rank_[0] = 0xFFFFFFFFFFFFFF00;
-  clear_rank_[1] = 0xFFFFFFFFFFFF00FF;
-  clear_rank_[2] = 0xFFFFFFFFFF00FFFF;
-  clear_rank_[3] = 0xFFFFFFFF00FFFFFF;
-  clear_rank_[4] = 0xFFFFFF00FFFFFFFF;
-  clear_rank_[5] = 0xFFFF00FFFFFFFFFF;
-  clear_rank_[6] = 0xFF00FFFFFFFFFFFF;
-  clear_rank_[7] = 0x00FFFFFFFFFFFFFF;
+  clear_rank_[RANK_1] = 0xFFFFFFFFFFFFFF00;
+  clear_rank_[RANK_2] = 0xFFFFFFFFFFFF00FF;
+  clear_rank_[RANK_3] = 0xFFFFFFFFFF00FFFF;
+  clear_rank_[RANK_4] = 0xFFFFFFFF00FFFFFF;
+  clear_rank_[RANK_5] = 0xFFFFFF00FFFFFFFF;
+  clear_rank_[RANK_6] = 0xFFFF00FFFFFFFFFF;
+  clear_rank_[RANK_7] = 0xFF00FFFFFFFFFFFF;
+  clear_rank_[RANK_8] = 0x00FFFFFFFFFFFFFF;
 
-  mask_rank_[0] = 0x00000000000000FF;
-  mask_rank_[1] = 0x000000000000FF00;
-  mask_rank_[2] = 0x0000000000FF0000;
-  mask_rank_[3] = 0x00000000FF000000;
-  mask_rank_[4] = 0x000000FF00000000;
-  mask_rank_[5] = 0x0000FF0000000000;
-  mask_rank_[6] = 0x00FF000000000000;
-  mask_rank_[7] = 0xFF00000000000000;
+  mask_rank_[FILE_A] = 0x00000000000000FF;
+  mask_rank_[FILE_B] = 0x000000000000FF00;
+  mask_rank_[FILE_C] = 0x0000000000FF0000;
+  mask_rank_[FILE_D] = 0x00000000FF000000;
+  mask_rank_[FILE_E] = 0x000000FF00000000;
+  mask_rank_[FILE_F] = 0x0000FF0000000000;
+  mask_rank_[FILE_G] = 0x00FF000000000000;
+  mask_rank_[FILE_H] = 0xFF00000000000000;
 
 	clear_file_[0] = 0xFEFEFEFEFEFEFEFE;
 	clear_file_[1] = 0xFDFDFDFDFDFDFDFD;
@@ -67,7 +67,7 @@ Board::Board() {
 	
 };
 
-void Board::ShowBoard(U64 bb) {
+void Board::ShowBoard(U64 bitboard) {
 	U64 shift = 1ULL;
 	int rank = 0;
 	int file = 0;
@@ -76,16 +76,16 @@ void Board::ShowBoard(U64 bb) {
 	for (rank = RANK_8; rank >= RANK_1; rank--) {
 		for (file = FILE_A; file <= FILE_H; file++) {
 			square = ((file)+(rank * 8));
-			if ((shift << square) & bb) {
+			if ((bitboard & shift << square)) {
 				std::cout << "x ";
 			}
 			else {
-				std::cout << "- ";
+				std::cout << ". ";
 			}
 		}
 		std::cout << "\n";
 	}
-	std::cout << "\n\n";
+	std::cout << "\n";
 };
 
 // getters
@@ -360,9 +360,9 @@ int Board::ParseFEN(const char* fen, Board b) {
 		}
 		switch (*fen) {
 		case 'K': castle_permisson_ |= W_KING_CASTLING; break;
-		case 'Q': castle_permisson_ |= W_KING_CASTLING; break;
-		case 'k': castle_permisson_ |= W_KING_CASTLING; break;
-		case 'q': castle_permisson_ |= W_KING_CASTLING; break;
+		case 'Q': castle_permisson_ |= W_QUEEN_CASTLING; break;
+		case 'k': castle_permisson_ |= B_KING_CASTLING; break;
+		case 'q': castle_permisson_ |= B_QUEEN_CASTLING; break;
 		default: break;
 		}
 		fen++;
