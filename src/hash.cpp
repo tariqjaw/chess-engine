@@ -7,7 +7,7 @@
 #include "board.hpp"
 #include "hash.hpp"
 
-U64 HashKey::Rand64() { // PRNG for 64 bit integers
+U64 HashKey::Rand64() { // PRNG for 64 bit integers (https://www.chessprogramming.org/Looking_for_Magics)
 	return (((U64)std::rand()) | ((U64)std::rand() << 15) | ((U64)std::rand() << 30) | ((U64)std::rand() << 45) | (((U64)std::rand() & 0xf) << 60));
 }
 U64 HashKey::PositionKey(Board b) {
@@ -15,7 +15,7 @@ U64 HashKey::PositionKey(Board b) {
 	int square = 0;
 	int target_piece = piece::EMPTY;
 
-	for (square = 0; square < 120; ++square) {
+	for (square = 0; square < 64; ++square) {
 		target_piece = b.GetPieceArray(square);
 		if (target_piece != NO_SQUARE && target_piece != piece::EMPTY) {
 			key ^= piece_keys[target_piece][square];
