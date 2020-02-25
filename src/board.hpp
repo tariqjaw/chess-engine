@@ -47,16 +47,10 @@ class Board {
 		U64 mask_rank_[8];
 		U64 piece_[64];
 
-		// piece moves
-		U64 white_king_moves_;
-		U64 black_king_moves_;
-		U64 white_knights_moves_;
-		U64 black_knights_moves_;
-
 		U64 position;
 		
 		int piece_array_[64];
-		int side_;
+		int side_; 
 		int king_[2];
 		int ply_;
 		int history_ply_;
@@ -96,10 +90,6 @@ class Board {
 		U64 KnightMoves(U64 knights, U64 side);
 		U64 WhitePawnMoves(U64 pawns, U64 black, U64 all);
 		U64 BlackPawnMoves(U64 pawns, U64 white, U64 all);
-		U64 GetWhiteKingMoves();
-		U64 GetBlackKingMoves();
-		U64 GetWhiteKnightsMoves();
-		U64 GetBlackKnightsMoves();
 		int GetPieceArray(int i);
 		U64 GetBitTable(int index);
 		int GetCastlePermission();
@@ -107,10 +97,7 @@ class Board {
 		int PopBit(U64* bitboard);
 		void SetBit(U64& bitboard, int index);
 		void ClearBit(U64& bitboard, int index);
-		void ResetBoard(Board b);
-
-
-		
+		void ResetBoard(Board b);		
 };
 
 #endif
