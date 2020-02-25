@@ -6,18 +6,17 @@
 typedef uint64_t U64;
 
 namespace piece {
-	enum PieceType: unsigned int {
-	 	PAWN = 0,
+	enum PieceType : unsigned int { // fundamental piece types
+		PAWN = 0,
 		KNIGHT = 1,
 		BISHOP = 2,
 		ROOK = 3,
 		QUEEN = 4,
 		KING = 5,
-		NO_PIECE_TYPE = 6,
-		PIECE_TYPE_NB = 7
+		NO_PIECE_TYPE = 6
 	};
 
-	enum Pieces: unsigned int {
+	enum Pieces: unsigned int { // black and white piece types
 		EMPTY = 0,
 		W_PAWN = 1,
 		W_KNIGHT = 2,
@@ -35,12 +34,12 @@ namespace piece {
 		B_PIECES = 14,
 	};
 
-	enum PieceValue: unsigned int {
+	enum PieceValue: unsigned int { // material value of pieces (https://www.chessprogramming.org/Point_Value)
 		PAWN_VALUE = 100,
-		KNIGHT_VALUE = 325,
-		BISHOP_VALUE = 325,
-		ROOK_VALUE = 500,
-		QUEEN_VALUE = 900,
+		KNIGHT_VALUE = 350,
+		BISHOP_VALUE = 350,
+		ROOK_VALUE = 525,
+		QUEEN_VALUE = 1000,
 		KING_VALUE = 10000
 	};
 };
@@ -51,7 +50,7 @@ enum Colour {
 	BOTH = 2
 };
 
-enum Square {
+enum Square { // set of squares on a board
 	A1, B1, C1, D1, E1, F1, G1, H1,
 	A2, B2, C2, D2, E2, F2, G2, H2,
 	A3, B3, C3, D3, E3, F3, G3, H3,
@@ -63,7 +62,7 @@ enum Square {
 	NO_SQUARE
 };
 
-enum File {
+enum File { // file indexes
 	FILE_A,
 	FILE_B,
 	FILE_C,
@@ -75,7 +74,7 @@ enum File {
   FILE_NULL
 };
 
-enum Rank {
+enum Rank { // rank indexes
 	RANK_1,
 	RANK_2,
 	RANK_3,
@@ -87,7 +86,7 @@ enum Rank {
 	RANK_NULL
 };
 
-enum Castling {
+enum Castling { // castling enums
 		W_KING_CASTLING = 1,
 		B_KING_CASTLING = 2,
 		W_QUEEN_CASTLING = 4,
