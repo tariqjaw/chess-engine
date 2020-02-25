@@ -20,9 +20,9 @@ int main() {
 	std::cout << "White knight's moves:\n";
 	my_board.ShowBoard(my_board.KnightMoves(my_board.GetWhiteKnights(), my_board.GetMaskRank(7)));
 	std::cout << "White Pawns' moves:\n";
-	my_board.ShowBoard(my_board.WhitePawnMoves(my_board.GetWhitePawns(), my_board.GetBlackPieces(), my_board.GetAllPieces()));
+	my_board.ShowBoard(my_board.WhitePawnMoves(my_board.GetWhitePawns(), my_board.GetBlackPawns(), my_board.GetAllPieces()));
 	std::cout << "Black Pawns' moves:\n";
-	my_board.ShowBoard(my_board.BlackPawnMoves(my_board.GetBlackPawns(), my_board.GetWhitePieces(), my_board.GetAllPieces()));
+	my_board.ShowBoard(my_board.BlackPawnMoves(my_board.GetBlackPawns(), my_board.GetWhitePawns(), my_board.GetAllPieces()));
 	std::cout << "Clear file A:\n";
 	my_board.ShowBoard(my_board.GetClearFile(FILE_A));
 	std::cout << "White knight positions:\n";
